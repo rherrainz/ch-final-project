@@ -22,7 +22,7 @@ export class CartManager {
             throw new Error(error);
         }
     }
-    async addCart(products){
+    async addCart(){
         try{
             const cart ={
                 id: await this.#generateId(),
@@ -74,21 +74,25 @@ export class CartManager {
         else {
             const index = carts.indexOf(cart);
             if (carts[index].products.find((p) => p.id === parseInt(idP))){
-                const indexP = carts[index].products.indexOf(carts[index].products.find((p) => p.id === parseInt(idP)));
+                const indexP = 
+                    carts[index]
+                        .products.indexOf(carts[index]
+                        .products.find((p) => p.id === parseInt(idP)));
                 carts[index].products[indexP].quantity += quantity;
-                
-
+                await fs.promises.writeFile(this.path,JSON.stringify(carts));
+                return carts[index].products[indexP];
             }else{
+                const id = parseInt(idP);
                 const product = {
-                id: idP,
+                id: id,
                 quantity: quantity
                 }
                 carts[index].products.push(product);
-
+                await fs.promises.writeFile(this.path,JSON.stringify(carts));
+                return product;
             }
         }
-        await fs.promises.writeFile(this.path,JSON.stringify(carts));
-        res.json({message:"producto agregado al carrito",product})
+
     }
 
     async #generateId(){
