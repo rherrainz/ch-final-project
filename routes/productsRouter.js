@@ -1,5 +1,6 @@
 import {Router} from 'express';
 import { ProductManager } from '../controller/productsController.js';
+import { socketServer } from '../app.js';
 
 const productsRouter = Router();
 const productManager = new ProductManager('./db/productsDB.json');
@@ -15,9 +16,12 @@ productsRouter.get('/:pid',async (req,res) => {
 });
 
 productsRouter.post('/',async (req,res) => {
-  const product = await req.body;
-  const newProduct = await productManager.addProduct(product);
-  res.json({message:"producto creado con éxito",newProduct});
+  const {title,description,code,price,status,stock,category,thumbnails} = await req.body;
+  const newProduct = await productManager.addProduct(title,description,code,price,status,stock,category,thumbnails);
+  const producto = {title,description,code,price,status,stock,category,thumbnails}
+  console.log({newProduct});
+  res.json({message:"producto creado con éxito",producto});
+  socketServer.emit('newProduct', producto);
 
 });
 
@@ -34,9 +38,14 @@ productsRouter.put('/:pid',async (req,res) => {
 });
 
 productsRouter.delete('/:pid',async (req,res) => {
-  const id = req.params.pid;
+  const id = parseInt(req.params.pid);
   const deletedProduct = await productManager.deleteProductById(id);
-  res.json({message:"producto eliminado con éxito",deletedProduct});
+  if (deletedProduct){
+     res.json({message:"producto eliminado con éxito",deletedProduct});
+     socketServer.emit('delProduct',id);
+  } else {
+    res.json({message:"producto no encontrado"})
+  }
 });
 
 export default productsRouter;

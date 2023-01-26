@@ -24,6 +24,7 @@ export class ProductManager {
     }
     async addProduct(title,description,code,price,status,stock,category,thumbnails){
         try{
+            
             const product ={
                 id: await this.#generateId(),
                 title,
@@ -55,7 +56,7 @@ export class ProductManager {
         const index = products.findIndex((product) => product.id === parseInt(id));
         if (index === -1)
             {
-                throw new Error('Usuario no encontrado');
+                throw new Error('Producto no encontrado');
             }else {
                 const updatedProduct={...products[index],...obj};
                 products.splice(index,1,updatedProduct);
@@ -68,12 +69,14 @@ export class ProductManager {
     async deleteProductById(id){
         const products = await this.getProducts();
         const product = products.find((product) => product.id === id);
-        if (product === undefined)  return console.log("Not found")
+        if (product === undefined) return false;
         else {
             const index = products.indexOf(product);
             products.splice(index,1);
+            await fs.promises.writeFile(this.path,JSON.stringify(products));
+            return product.id;
         }
-        await fs.promises.writeFile(this.path,JSON.stringify(products));
+        
     }
 
     async #generateId(){
