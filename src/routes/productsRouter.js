@@ -1,9 +1,9 @@
 import {Router} from 'express';
-import { ProductManager } from '../controller/productsController.js';
+import { ProductManager } from '../dao/mongoDB/controller/productsController.js';
 import { socketServer } from '../app.js';
 
 const productsRouter = Router();
-const productManager = new ProductManager('./db/productsDB.json');
+const productManager = new ProductManager();
 
 productsRouter.get('/', async (req,res) => {
   const products = await  productManager.getProducts();
@@ -38,7 +38,7 @@ productsRouter.put('/:pid',async (req,res) => {
 });
 
 productsRouter.delete('/:pid',async (req,res) => {
-  const id = parseInt(req.params.pid);
+  const id = req.params.pid;
   const deletedProduct = await productManager.deleteProductById(id);
   if (deletedProduct){
      res.json({message:"producto eliminado con éxito",deletedProduct});

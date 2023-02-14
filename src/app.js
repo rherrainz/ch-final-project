@@ -5,7 +5,8 @@ import handlebars from "express-handlebars";
 import { dirname} from "path";
 import { fileURLToPath } from "url";
 import {Server} from "socket.io";
-import {ProductManager} from "./controller/productsController.js";
+import {ProductManager} from "./dao/fileSystem/controller/productsController.js";
+import './dbConfig.js'
 
 const app = express();
 
