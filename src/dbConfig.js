@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
+import 'dotenv/config'
 
-const URI ='mongodb+srv://dbUser:Berta4552@cluster0.u5hn7vb.mongodb.net/ecommerce?retryWrites=true&w=majority'
+const URI = process.env.MONGO_URI;
 
 mongoose.set('strictQuery', false);
 
