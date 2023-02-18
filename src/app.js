@@ -7,6 +7,7 @@ import { fileURLToPath } from "url";
 import {Server} from "socket.io";
 import {ProductManager} from "./dao/mongoDB/controller/productsController.js";
 import './dbConfig.js'
+import 'dotenv/config'
 
 const app = express();
 
