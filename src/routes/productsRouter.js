@@ -6,7 +6,8 @@ const productsRouter = Router();
 const productManager = new ProductManager();
 
 productsRouter.get('/', async (req,res) => {
-  const products = await  productManager.getProducts();
+  const {limit,page,query,sort}=req.query;
+  const products = await  productManager.getProducts(limit || 'max');
   res.json({products});
 });
 
@@ -18,10 +19,9 @@ productsRouter.get('/:pid',async (req,res) => {
 productsRouter.post('/',async (req,res) => {
   const {title,description,code,price,status,stock,category,thumbnails} = await req.body;
   const newProduct = await productManager.addProduct(title,description,code,price,status,stock,category,thumbnails);
-  const producto = {title,description,code,price,status,stock,category,thumbnails}
   console.log({newProduct});
-  res.json({message:"producto creado con éxito",producto});
-  socketServer.emit('newProduct', producto);
+  res.json({message:"producto creado con éxito",newProduct});
+  socketServer.emit('newProduct', newProduct);
 
 });
 

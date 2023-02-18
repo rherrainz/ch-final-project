@@ -1,19 +1,21 @@
 import { productsModel } from "../models/productsModel.js";
 
 export class ProductManager {
-    async getProducts(limit) {
+    async getProducts(limit,page,query,sort) {
         try {
             if (limit === "max") {
-                const infoProducts = await productsModel.find();
-                return infoProducts;
+                const products = await productsModel.find().lean();
+                return products;
             } else {
-                const infoProducts = await productsModel.find().limit(limit);
-                return infoProducts;
+                //const infoProducts = await productsModel.find().lean().limit(limit);
+                const products = await productsModel.paginate({}, { limit, page, sort, query });
+                return products;
             }
         } catch (error) {
             console.log(error);
             throw new Error(error);
         }
+        
     }
     
     async addProduct(title, description, code, price, status, stock, category, thumbnails) {

@@ -5,7 +5,7 @@ import handlebars from "express-handlebars";
 import { dirname} from "path";
 import { fileURLToPath } from "url";
 import {Server} from "socket.io";
-import {ProductManager} from "./dao/fileSystem/controller/productsController.js";
+import {ProductManager} from "./dao/mongoDB/controller/productsController.js";
 import './dbConfig.js'
 
 const app = express();
@@ -24,11 +24,9 @@ app.set('view engine', 'handlebars');
 app.set('views', __dirname+'/views');
 
 app.get("/", async (req, res) => {
-    
-    const productManager = new ProductManager(__dirname+'/db/productsDB.json');
-    const products = await productManager.getProducts();
-  
-    res.render("home", {products});
+  const productManager = new ProductManager();
+  const products = await productManager.getProducts();
+  res.render("home", {products});
 });
 
 app.get("/realtimeproducts", async (req, res) => {
