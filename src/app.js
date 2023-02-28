@@ -12,7 +12,7 @@ import 'dotenv/config'
 const app = express();
 
 //configuración
-const PORT = 8080;
+const PORT = PROCESS.ENV.PORT || 8080;
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 app.use(express.json());
