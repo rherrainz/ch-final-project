@@ -5,17 +5,32 @@ import { socketServer } from '../app.js';
 const productsRouter = Router();
 const productManager = new ProductManager();
 
+//get all products with pagination
 productsRouter.get('/', async (req,res) => {
-  const {limit,page,query,sort}=req.query;
-  const products = await  productManager.getProducts(limit || 'max');
-  res.json({products});
+  const {limit=10,page=1,category,sort}=req.query;
+  const products = await  productManager.getProducts(limit,page,category,sort);
+
+  res.json({
+    status: products.docs ? 'success' : 'error',
+    products: products.docs,
+    totalPages: products.totalPages,
+    prevPage: products.hasPrevPage ? products.prevPage : null,
+    nextPage: products.hasNextPage ? products.nextPage : null,
+    page: products.page,
+    hasPrevPage: products.hasPrevPage? true : false,
+    hasNextPage: products.hasNextPage? true : false,
+    prevLink: products.hasPrevPage ? `http://localhost:8080/api/products?limit=${limit}&page=${products.prevPage}` : null,
+    nextLink: products.hasNextPage ? `http://localhost:8080/api/products?limit=${limit}&page=${products.nextPage}` : null,
+  });
 });
 
+//get product by id
 productsRouter.get('/:pid',async (req,res) => {
   const product = await productManager.getProductById(req.params.pid);
   res.json({product});
 });
 
+//add new product
 productsRouter.post('/',async (req,res) => {
   const {title,description,code,price,status,stock,category,thumbnails} = await req.body;
   const newProduct = await productManager.addProduct(title,description,code,price,status,stock,category,thumbnails);
@@ -25,6 +40,7 @@ productsRouter.post('/',async (req,res) => {
 
 });
 
+//update product by id
 productsRouter.put('/:pid',async (req,res) => {
   const id = req.params.pid;
   const obj = req.body;
@@ -37,6 +53,7 @@ productsRouter.put('/:pid',async (req,res) => {
   }
 });
 
+//delete product by id
 productsRouter.delete('/:pid',async (req,res) => {
   const id = req.params.pid;
   const deletedProduct = await productManager.deleteProductById(id);

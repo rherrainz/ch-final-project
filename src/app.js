@@ -1,18 +1,18 @@
 import express from "express";
 import productsRouter from "./routes/productsRouter.js";
 import cartsRouter from "./routes/cartsRouter.js";
+import viewsRouter from "./routes/viewsRouter.js";
 import handlebars from "express-handlebars";
 import { dirname} from "path";
 import { fileURLToPath } from "url";
 import {Server} from "socket.io";
-import {ProductManager} from "./dao/mongoDB/controller/productsController.js";
 import './dbConfig.js'
 import 'dotenv/config'
 
 const app = express();
 
 //configuración
-const PORT = PROCESS.ENV.PORT || 8080;
+const PORT = process.env.PORT || 8080;
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
 app.use(express.json());
@@ -24,12 +24,8 @@ app.engine('handlebars', handlebars.engine());
 app.set('view engine', 'handlebars');
 app.set('views', __dirname+'/views');
 
-app.get("/", async (req, res) => {
-  const productManager = new ProductManager();
-  const products = await productManager.getProducts();
-  res.render("home", {products});
-});
-
+//rutas
+app.use("/", viewsRouter);
 app.get("/realtimeproducts", async (req, res) => {
   res.render('realTimeProducts');
 });
