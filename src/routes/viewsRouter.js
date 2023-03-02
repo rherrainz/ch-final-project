@@ -1,31 +1,57 @@
-import {Router} from 'express';
-import { ProductManager } from '../dao/mongoDB/controller/productsController.js';
-import { CartManager } from '../dao/mongoDB/controller/cartsController.js';
+import { Router } from "express";
+import { ProductManager } from "../dao/mongoDB/controller/productsController.js";
+import { CartManager } from "../dao/mongoDB/controller/cartsController.js";
+import {auth, isLogged} from '../middlewares/auth.middlewares.js'
 
 const cartManager = new CartManager();
 const productManager = new ProductManager();
 
 const viewsRouter = Router();
 
-viewsRouter.get('/products', async (req, res) => {
-    const{limit=10,page=1,category,sort}=req.query;
-    const productsPage = await productManager.getProducts(limit,page,category,sort);
-    const products = productsPage.docs;
-    console.log(products);
-    res.render('products', {products});
+viewsRouter.get("/products", async (req, res) => {
+  const { limit = 10, page = 1, category, sort } = req.query;
+  const productsPage = await productManager.getProducts(
+    limit,
+    page,
+    category,
+    sort
+  );
+  const email = req.session.email;
+  console.log(email);
+  const products = productsPage.docs;
+  res.render("products", { products,email });
 });
 
-viewsRouter.get('/carts/:cid', async (req, res) => {
-    const {cid} = req.params;
-    const cart = await cartManager.getCartById(cid);
-    console.log(cart.products);
-    res.render('carts', {cart});
+viewsRouter.get("/carts/:cid", async (req, res) => {
+  const { cid } = req.params;
+  const cart = await cartManager.getCartById(cid);
+  console.log(cart.products);
+  res.render("carts", { cart });
 });
 
-viewsRouter.get('/', async (req, res) => {
-    res.render('home');
+viewsRouter.get("/", async (req, res) => {
+  res.render("login");
 });
 
+viewsRouter.get('/registro',isLogged, (req, res) => {
+    res.render('registro',{email: req.session.email});
+});
+
+viewsRouter.get('/errorRegistro', (req, res) => {
+    res.render('errorRegistro');
+})
+
+viewsRouter.get('/login',isLogged, (req, res) => {
+    res.render('login');
+});
+
+viewsRouter.get('/perfil',auth, (req, res) => {
+    res.render('perfil',{email: req.session.email});
+});
+
+viewsRouter.get('/errorLogin', (req, res) => {
+    res.render('errorLogin');
+});
 
 export default viewsRouter;
 

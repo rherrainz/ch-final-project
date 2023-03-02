@@ -2,10 +2,15 @@ import express from "express";
 import productsRouter from "./routes/productsRouter.js";
 import cartsRouter from "./routes/cartsRouter.js";
 import viewsRouter from "./routes/viewsRouter.js";
+import sessionRouter from "./routes/sessionRouter.js";
+import usersRouter from "./routes/usersRouter.js";
 import handlebars from "express-handlebars";
 import { dirname} from "path";
 import { fileURLToPath } from "url";
 import {Server} from "socket.io";
+import cookieParser from "cookie-parser";
+import session from "express-session";
+import mongoStore from "connect-mongo";
 import './dbConfig.js'
 import 'dotenv/config'
 
@@ -15,6 +20,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+//configuración de app()
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(express.static(__dirname + "/public"));
@@ -23,6 +29,18 @@ app.use(express.static(__dirname + "/public"));
 app.engine('handlebars', handlebars.engine());
 app.set('view engine', 'handlebars');
 app.set('views', __dirname+'/views');
+app.use(cookieParser());
+
+//session
+app.use(session({
+  store: new mongoStore({
+    mongoUrl: process.env.MONGO_URI,
+  }),
+  resave: false,
+  saveUninitialized: false,
+  secret: process.env.SESSION_SECRET,
+  cookie: {maxAge:60000}  
+}));
 
 //rutas
 app.use("/", viewsRouter);
@@ -31,6 +49,9 @@ app.get("/realtimeproducts", async (req, res) => {
 });
 app.use("/api/products", productsRouter);
 app.use('/api/carts', cartsRouter);
+app.use('/session', sessionRouter);
+app.use('/users', usersRouter);
+
 
 const httpServer = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
