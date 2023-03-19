@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { usersModel } from "../dao/mongoDB/models/users.model.js";
+import passport from "passport";
 
 const router = Router();
 
@@ -35,7 +36,7 @@ router.post("/registro", async (req, res) => {
   });
 
   //registro con github
-  router.get('/registroGitHub', passport.authenticate('githubRegistro'), {scope: ['user:email']});
+  router.get('/registroGitHub', passport.authenticate('githubRegistro', {scope: ['user:email']}));
   router.get('/github', passport.authenticate('githubRegistro', { failureRedirect: '/errorLogin' }), (req, res) => {
     req.session.email = req.user.email;
     req.session.logged = true;

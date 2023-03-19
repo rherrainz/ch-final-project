@@ -5,8 +5,6 @@ import viewsRouter from "./routes/viewsRouter.js";
 import sessionRouter from "./routes/sessionRouter.js";
 import usersRouter from "./routes/usersRouter.js";
 import handlebars from "express-handlebars";
-import { dirname} from "path";
-import { fileURLToPath } from "url";
 import {Server} from "socket.io";
 import cookieParser from "cookie-parser";
 import session from "express-session";
@@ -14,12 +12,13 @@ import mongoStore from "connect-mongo";
 import './dbConfig.js'
 import 'dotenv/config'
 import './passport/passportStrategies.js'
+import './utils.js'
 
 const app = express();
 
 //configuración
 const PORT = process.env.PORT || 8080;
-const __dirname = dirname(fileURLToPath(import.meta.url));
+
 
 //configuración de app()
 app.use(express.json());

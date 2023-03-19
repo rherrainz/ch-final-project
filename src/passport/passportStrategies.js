@@ -1,8 +1,11 @@
 import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
-import { Strategy as GithubStrategy } from 'passport-github-2';
-import UsersManager from './usersManager.js';
+import { Strategy as GitHubStrategy } from 'passport-github2';
+import { ExtractJwt, Strategy as jwtStrategy} from 'passport-jwt';
+import UsersManager from '../dao/mongoDB/controller/usersControler.js';
 import { usersModel } from '../dao/mongoDB/models/users.model.js';
+import { hashPassword } from "../utils.js";
+
 
 const usersManager = new UsersManager();
 
@@ -30,6 +33,38 @@ passport.use(
   );
 
 //passport github strategy
+passport.use(
+    "githubRegistro",
+    new GitHubStrategy(
+      {
+        clientID: "Iv1.53c688be8c2c19be",
+        clientSecret: "e358518354e5a6bf85569d2d0aa1f8deda0e5946",
+        callbackURL: "http://localhost:8080/users/github/",
+      },
+      async (accessToken, refreshToken, profile, done) => {
+      console.log(profile);
+      console.log(profile._json.email)
+        const usuario = await usersModel.findOneAndDelete({
+          email: profile._json.email,
+        });
+        if (!usuario) {
+          const nuevoUsuario = {
+            first_name: profile._json.name.split(" ")[0],
+            last_name: profile._json.name.split(" ")[1],
+            email: profile._json.email,
+            password: " ",
+          };
+          const dbResultado = await usersModel.create(nuevoUsuario);
+          done(null, dbResultado);
+        } else {
+          done(null, usuario);
+        }
+  
+        done(null, usuario);
+      }
+    )
+  );
+
 //passport-jwt
 passport.use('jwt', new jwtStrategy({
     jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -40,3 +75,37 @@ passport.use('jwt', new jwtStrategy({
       done(null, jwtPayload.user);
     }
   ))
+  passport.serializeUser((usuario, done) => {
+    done(null, usuario._id);
+  });
+  
+  passport.deserializeUser(async (_id, done) => {
+    const usuario = await usersModel.findById(_id);
+    done(null, usuario);
+  });
+  ///
+  const cookieExtractor = (req) => {
+    const token = req?.cookies?.token;
+    return token;
+  };
+
+//passport jwt con cookies
+passport.use('jwtCookies', new jwtStrategy({
+    jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+    secretOrKey: 'secretJWT'
+  },
+    async (jwtPayload, done) => {
+      //console.log(jwtPayload);
+      done(null, jwtPayload.user);
+    }
+  ))
+   
+  
+  passport.serializeUser((usuario, done) => {
+    done(null, usuario._id);
+  });
+  
+  passport.deserializeUser(async (_id, done) => {
+    const usuario = await usersModel.findById(_id);
+    done(null, usuario);
+  });
