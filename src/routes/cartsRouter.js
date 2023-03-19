@@ -6,13 +6,13 @@ const cartManager = new CartManager();
 
 //get all carts
 cartRouter.get('/', async(req,res) => {
-    const carts = await cartManager.getCarts();
+    const carts = await cartManager.getCarts().populate('products').lean();
     res.json({carts});  
 });
 
 //get one cart by id
 cartRouter.get('/:cid', async(req,res) => {
-    const cart = await cartManager.getCartById(req.params.cid);
+    const cart = await cartManager.getCartById(req.params.cid).populate('products').lean();
     res.json({cart});
   
 });

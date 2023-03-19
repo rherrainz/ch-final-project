@@ -33,13 +33,21 @@ router.post("/registro", async (req, res) => {
       res.redirect("/errorLogin");
     }
   });
-  
+
+  //registro con github
+  router.get('/registroGitHub', passport.authenticate('githubRegistro'), {scope: ['user:email']});
+  router.get('/github', passport.authenticate('githubRegistro', { failureRedirect: '/errorLogin' }), (req, res) => {
+    req.session.email = req.user.email;
+    req.session.logged = true;
+    res.redirect('/products');
+    })
   router.get("/logout", (req, res) => {
     req.session.destroy((error) => {
       if (error) console.log(error);
       else res.redirect("/login");
     });
   });
+
   
   export default router;
   

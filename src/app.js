@@ -13,6 +13,7 @@ import session from "express-session";
 import mongoStore from "connect-mongo";
 import './dbConfig.js'
 import 'dotenv/config'
+import './passport/passportStrategies.js'
 
 const app = express();
 
