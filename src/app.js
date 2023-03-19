@@ -9,6 +9,7 @@ import {Server} from "socket.io";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import mongoStore from "connect-mongo";
+import { __dirname } from "./utils.js";
 import './dbConfig.js'
 import 'dotenv/config'
 import './passport/passportStrategies.js'

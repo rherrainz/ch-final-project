@@ -5,6 +5,7 @@ import { ExtractJwt, Strategy as jwtStrategy} from 'passport-jwt';
 import UsersManager from '../dao/mongoDB/controller/usersControler.js';
 import { usersModel } from '../dao/mongoDB/models/users.model.js';
 import { hashPassword } from "../utils.js";
+import 'dotenv/config'
 
 
 const usersManager = new UsersManager();
@@ -37,8 +38,8 @@ passport.use(
     "githubRegistro",
     new GitHubStrategy(
       {
-        clientID: "Iv1.53c688be8c2c19be",
-        clientSecret: "e358518354e5a6bf85569d2d0aa1f8deda0e5946",
+        clientID: process.env.GITHUB_CLIENT_ID,
+        clientSecret: process.env.GITHUB_CLIENT_SECRET,
         callbackURL: "http://localhost:8080/users/github/",
       },
       async (accessToken, refreshToken, profile, done) => {
