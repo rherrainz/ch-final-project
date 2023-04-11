@@ -1,54 +1,27 @@
 import { Router } from "express";
 import { usersModel } from "../dao/mongoDB/models/users.model.js";
+import { UsersController } from "../../controllers/usersControllers.js";
 import passport from "passport";
 
 const router = Router();
+const usersController = new UsersController();
 
-router.post("/registro", async (req, res) => {
-    const { email, password } = req.body;
-    const existeUsuario = await usersModel.find({ email, password });
-    if (existeUsuario.length !== 0) {
-      res.redirect("/errorRegistro");
-    } else {
-      await usersModel.create(req.body);
-      res.redirect("/login");
-    }
-  });
-  
-  router.post("/login", async (req, res) => {
-    const { email, password } = req.body;
-    const usuario = await usersModel.find({ email, password });
-    if (usuario.length !== 0) {
-      for (const key in req.body) {
-        req.session[key] = req.body[key];
-      }
-      req.session.logged = true;
-      if(email==='adminCoder@coder.com'&&password==='adminCod3r123'){
-          req.session.isAdmin = true;
-      } else
-      {
-          req.session.isAdmin = false;
-      }
-      res.redirect("/products");
-    } else {
-      res.redirect("/errorLogin");
-    }
-  });
+router.post("/registro", usersController.addUser());
 
-  //registro con github
-  router.get('/registroGitHub', passport.authenticate('githubRegistro', {scope: ['user:email']}));
-  router.get('/github', passport.authenticate('githubRegistro', { failureRedirect: '/errorLogin' }), (req, res) => {
-    req.session.email = req.user.email;
-    req.session.logged = true;
-    res.redirect('/products');
-    })
-  router.get("/logout", (req, res) => {
-    req.session.destroy((error) => {
-      if (error) console.log(error);
-      else res.redirect("/login");
-    });
-  });
+router.post("/login", usersController.login());
 
-  
-  export default router;
-  
+//registro con github
+router.get(
+  "/registroGitHub",
+  passport.authenticate("githubRegistro", { scope: ["user:email"] })
+);
+
+router.get(
+  "/github",
+  passport.authenticate("githubRegistro", { failureRedirect: "/errorLogin" }),
+  usersController.getGitHub()
+);
+
+router.get("/logout", usersController.logout());
+
+export default router;

@@ -1,86 +1,35 @@
 import {Router} from 'express';
-import { CartManager } from '../dao/mongoDB/controller/cartsController.js';
+import { CartController } from '../../controllers/cartsControllers.js';
 
 const cartRouter = Router();
-const cartManager = new CartManager();
+const cartController = new CartController();
 
 //get all carts
-cartRouter.get('/', async(req,res) => {
-    const carts = await cartManager.getCarts().populate('products').lean();
-    res.json({carts});  
-});
+cartRouter.get('/', cartController.getCarts()); 
 
 //get one cart by id
-cartRouter.get('/:cid', async(req,res) => {
-    const cart = await cartManager.getCartById(req.params.cid).populate('products').lean();
-    res.json({cart});
-  
-});
+cartRouter.get('/:cid', cartController.getCartById());
 
 //add a new cart
-cartRouter.post('/', async(req,res) => {
-    const newCart = await cartManager.addCart();
-    res.json({message:"carrito creado con éxito",newCart});
-  
-});
+cartRouter.post('/', cartController.addCart());
 
 //update a cart by id
-cartRouter.put('/:cid', async(req,res) => {
-    const id = req.params.cid;
-    const obj = req.body;
-    try{
-      const updatedCart = await cartManager.updateCartById(id,obj);
-      res.json({message:"carrito actualizado con éxito",updatedCart});
-    }catch(error){
-      return(error);
-    }
-});
+cartRouter.put('/:cid', cartController.updateCartById());
 
 //update a product quantity in a cart by id
-cartRouter.put('/:cid/product/:pid',async(req,res) => {
-    const {cid,pid} = req.params
-    const quantity = req.body.quantity;
-    const updatedCart = await cartManager.updateProductQuantity(cid,pid,quantity);
-    res.json({message:"carrito actualizado con éxito",updatedCart});
-})
+cartRouter.put('/:cid/product/:pid', cartController.updateQuantityById());
 
 //delete a cart by id
-cartRouter.delete('/:cid',async(req,res) => {
-    const id = req.params.cid;
-    const deletedCart = await cartManager.deleteCartById(id);
-    if (deletedCart){
-       res.json({message:"carrito eliminado con éxito",deletedCart});
-    } else {
-      res.json({message:"carrito no encontrado"})
-    }
-});
+cartRouter.delete('/:cid', cartController.deleteCartById());
 
 //delete a product from a cart by id
-cartRouter.delete('/:cid/product/:pid',async(req,res) => {
-    const {cid,pid} = req.params
-    const deletedProduct = await cartManager.deleteProductFromCartById(cid,pid);
-    if (deletedProduct){
-       res.json({message:"producto eliminado con éxito",deletedProduct});
-    } else {
-      res.json({message:"producto no encontrado"})
-    }
-});
+cartRouter.delete('/:cid/product/:pid', cartController.deleteProductFromCartById());
 
 //add a product to a cart by id
-cartRouter.post('/:cid/product/:pid',async(req,res) => {
-  const cid = req.params.cid;
-  const pid = req.params.pid;
-  //const quantity = req.body.quantity;
-  const newProduct = await cartManager.addProductToCart(cid,pid);
-  res.json({message:"producto agregado con éxito",newProduct});
-});
+cartRouter.post('/:cid/product/:pid', cartController.addProductToCartById());
+
 //update a product quantity in a cart by id
-cartRouter.put('/:cid/product/:pid',async(req,res) => {
-    const {cid,pid} = req.params
-    const quantity = req.body.quantity;
-    const updatedCart = await cartManager.updateProductQuantity(cid,pid,quantity);
-    res.json({message:"carrito actualizado con éxito",updatedCart});
-});
+cartRouter.put('/:cid/product/:pid', cartController.updateQuantityById());
 
 
 

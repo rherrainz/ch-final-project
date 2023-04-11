@@ -1,4 +1,4 @@
-import { productsModel } from "../models/productsModel.js";
+import { productsModel } from "../dao/mongoDB/models/productsModel.js";
 
 export class ProductManager {
   async getProducts(limit, page, category, sort) {

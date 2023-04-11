@@ -1,68 +1,24 @@
 import {Router} from 'express';
-import { ProductManager } from '../dao/mongoDB/controller/productsController.js';
-import { socketServer } from '../app.js';
+import { ProductController } from '../../controllers/productsControllers.js';
+
 
 const productsRouter = Router();
-const productManager = new ProductManager();
+const productController = new ProductController();
+
 
 //get all products with pagination
-productsRouter.get('/', async (req,res) => {
-  const {limit=10,page=1,category,sort}=req.query;
-  const products = await  productManager.getProducts(limit,page,category,sort);
-
-  res.json({
-    status: products.docs ? 'success' : 'error',
-    products: products.docs,
-    totalPages: products.totalPages,
-    prevPage: products.hasPrevPage ? products.prevPage : null,
-    nextPage: products.hasNextPage ? products.nextPage : null,
-    page: products.page,
-    hasPrevPage: products.hasPrevPage? true : false,
-    hasNextPage: products.hasNextPage? true : false,
-    prevLink: products.hasPrevPage ? `http://localhost:8080/api/products?limit=${limit}&page=${products.prevPage}` : null,
-    nextLink: products.hasNextPage ? `http://localhost:8080/api/products?limit=${limit}&page=${products.nextPage}` : null,
-  });
-});
+productsRouter.get('/', productController.getProducts());
 
 //get product by id
-productsRouter.get('/:pid',async (req,res) => {
-  const product = await productManager.getProductById(req.params.pid);
-  res.json({product});
-});
+productsRouter.get('/:pid', productController.getProductById());
 
 //add new product
-productsRouter.post('/',async (req,res) => {
-  const {title,description,code,price,status,stock,category,thumbnails} = await req.body;
-  const newProduct = await productManager.addProduct(title,description,code,price,status,stock,category,thumbnails);
-  console.log({newProduct});
-  res.json({message:"producto creado con éxito",newProduct});
-  socketServer.emit('newProduct', newProduct);
-
-});
+productsRouter.post('/', productController.addProduct());
 
 //update product by id
-productsRouter.put('/:pid',async (req,res) => {
-  const id = req.params.pid;
-  const obj = req.body;
-  console.log(id,obj)
-  try{
-    const updatedProduct = await productManager.updateProductById(id,obj);
-    res.json({message:"producto actualizado con éxito",updatedProduct});
-  }catch(error){
-    return(error);
-  }
-});
+productsRouter.put('/:pid', productController.updateProductById());
 
 //delete product by id
-productsRouter.delete('/:pid',async (req,res) => {
-  const id = req.params.pid;
-  const deletedProduct = await productManager.deleteProductById(id);
-  if (deletedProduct){
-     res.json({message:"producto eliminado con éxito",deletedProduct});
-     socketServer.emit('delProduct',id);
-  } else {
-    res.json({message:"producto no encontrado"})
-  }
-});
+productsRouter.delete('/:pid', productController.deleteProductById());
 
 export default productsRouter;

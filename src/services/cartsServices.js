@@ -1,4 +1,4 @@
-import { cartsModel } from "../models/cartsModel.js";
+import { cartsModel } from "../dao/mongoDB/models/cartsModel.js";
 
 export class CartManager {
   async getCarts() {

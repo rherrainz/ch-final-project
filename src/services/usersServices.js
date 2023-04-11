@@ -1,4 +1,4 @@
-import { usersModel } from "../models/users.model.js";
+import { usersModel } from "../dao/mongoDB/models/users.model.js";
 
 export default class UsersManager{
     async getUsers(email,password){
