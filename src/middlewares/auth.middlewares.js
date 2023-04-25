@@ -8,8 +8,16 @@ export function auth(req, res, next) {
   
   export function isLogged(req, res, next) {
     if (req.session.logged) {
-      res.redirect('/views/perfil');
+      next()
     } else {
+      res.redirect('/views/login');
+    }
+  }
+
+  export function isAdmin(req, res, next) {
+    if (req.session.logged && req.session.user.admin) {
       next();
+    } else {
+      res.redirect('/views/login');
     }
   }

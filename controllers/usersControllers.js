@@ -1,7 +1,6 @@
 import { UsersManager } from "../services/usersServices.js";
-import passport from "passport";
 
-const usersManager = new UsersManager();
+export const usersManager = new UsersManager();
 
 export class UsersController {
   async addUser(req, res) {

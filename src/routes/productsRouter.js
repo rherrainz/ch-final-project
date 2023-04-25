@@ -1,5 +1,6 @@
 import {Router} from 'express';
 import { ProductController } from '../../controllers/productsControllers.js';
+import { isAdmin,isLogged } from '../middlewares/auth.middlewares.js';
 
 
 const productsRouter = Router();
@@ -13,12 +14,12 @@ productsRouter.get('/', productController.getProducts());
 productsRouter.get('/:pid', productController.getProductById());
 
 //add new product
-productsRouter.post('/', productController.addProduct());
+productsRouter.post('/', isAdmin(), productController.addProduct());
 
 //update product by id
-productsRouter.put('/:pid', productController.updateProductById());
+productsRouter.put('/:pid', isAdmin(), productController.updateProductById());
 
 //delete product by id
-productsRouter.delete('/:pid', productController.deleteProductById());
+productsRouter.delete('/:pid',isAdmin(), productController.deleteProductById());
 
 export default productsRouter;

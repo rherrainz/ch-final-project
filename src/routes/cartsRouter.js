@@ -1,5 +1,6 @@
 import {Router} from 'express';
 import { CartController } from '../../controllers/cartsControllers.js';
+import { isLogged } from '../middlewares/auth.middlewares.js';
 
 const cartRouter = Router();
 const cartController = new CartController();
@@ -11,25 +12,25 @@ cartRouter.get('/', cartController.getCarts());
 cartRouter.get('/:cid', cartController.getCartById());
 
 //add a new cart
-cartRouter.post('/', cartController.addCart());
+cartRouter.post('/', isLogged(), cartController.addCart());
 
 //update a cart by id
-cartRouter.put('/:cid', cartController.updateCartById());
+cartRouter.put('/:cid', isLogged(), cartController.updateCartById());
 
 //update a product quantity in a cart by id
-cartRouter.put('/:cid/product/:pid', cartController.updateQuantityById());
+cartRouter.put('/:cid/product/:pid', isLogged(), cartController.updateQuantityById());
 
 //delete a cart by id
-cartRouter.delete('/:cid', cartController.deleteCartById());
+cartRouter.delete('/:cid', isLogged(),cartController.deleteCartById());
 
 //delete a product from a cart by id
-cartRouter.delete('/:cid/product/:pid', cartController.deleteProductFromCartById());
+cartRouter.delete('/:cid/product/:pid', isLogged(), cartController.deleteProductFromCartById());
 
 //add a product to a cart by id
-cartRouter.post('/:cid/product/:pid', cartController.addProductToCartById());
+cartRouter.post('/:cid/product/:pid', isLogged(), cartController.addProductToCartById());
 
 //update a product quantity in a cart by id
-cartRouter.put('/:cid/product/:pid', cartController.updateQuantityById());
+cartRouter.put('/:cid/product/:pid', isLogged(), cartController.updateQuantityById());
 
 
 
