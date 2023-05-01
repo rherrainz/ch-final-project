@@ -1,51 +1,22 @@
-import { productsModel } from "../dao/mongoDB/models/productsModel.js";
+import { ProductMongo, ProductsMongo } from "../persistencia/dao/mongoDB/managers/productsMongo.js";
+
+const productsMongo = new ProductsMongo();
 
 export class ProductManager {
   async getProducts(limit, page, category, sort) {
     try {
-      
-      if (!category) {
-        const products = await productsModel.paginate(
-          {},
-          { limit, page, sort, lean: true }
-        );
-        return products;
-      } else {
-        const products = await productsModel.paginate(
-          { category },
-          { limit, page, sort ,lean: true }
-        );
-        return products;
-      }
+      const products = await productsMongo.getProducts(limit, page, category, sort);
+      return products
     } catch (error) {
       console.log(error);
       throw new Error(error);
     }
   }
 
-  async addProduct(
-    title,
-    description,
-    code,
-    price,
-    status,
-    stock,
-    category,
-    thumbnails
-  ) {
+  async addProduct(obj) {
     try {
-      const product = {
-        title,
-        description,
-        code,
-        price,
-        status: true,
-        stock,
-        category,
-        thumbnails: [],
-      };
-      const newProduct = await productsModel.create(product);
-      return newProduct;
+      const product = await productsMongo.addProduct(obj);
+      return product;
     } catch (error) {
       console.log(error);
       throw new Error(error);
@@ -54,7 +25,7 @@ export class ProductManager {
 
   async getProductById(id) {
     try {
-      const product = await productsModel.findById(id);
+      const product = await productsMongo.getProductById(id);
       return product;
     } catch (error) {
       console.log(error);
@@ -64,7 +35,7 @@ export class ProductManager {
 
   async updateProductById(id, obj) {
     try {
-      const updatedProduct = productsModel.findByIdAndUpdate(id, obj);
+      const updatedProduct = productsMongo.updateProductById(id, obj);
       return updatedProduct;
     } catch (error) {
       console.log(error);
@@ -74,7 +45,7 @@ export class ProductManager {
 
   async deleteProductById(id) {
     try {
-      const deletedProduct = await productsModel.findByIdAndDelete(id);
+      const deletedProduct = await productsMongo.deleteProductById(id);
       return deletedProduct;
     } catch (error) {
       console.log(error);

@@ -1,9 +1,10 @@
-import { ticketsModel } from "../dao/mongoDB/models/ticketsModel";
+import { TicketsMongo } from "../persistencia/dao/mongoDB/managers/ticketsMongo.js";
 
+const ticketsMongo = new TicketsMongo();
 export class TicketManager {
     async getTickets() {
         try {
-            const infoTickets = await ticketsModel.find();
+            const infoTickets = await ticketsMongo.getTickets();
             return infoTickets;
         } catch (error) {
             console.log(error);
@@ -12,7 +13,7 @@ export class TicketManager {
     }
     async getTicketById(id) {
         try {
-            const ticket = await ticketsModel.findById(id).lean();
+            const ticket = await ticketsMongo.getTicketById(id);
             return ticket;
         } catch (error) {
             console.log(error);
@@ -21,12 +22,8 @@ export class TicketManager {
     }
     async addTicket(cart) {
         try {
-            const ticket = {
-                products: [],
-                cart,
-            };
-            const newTicket = await ticketsModel.create(ticket);
-            await newTicket.save();
+            const newTicket = await ticketsMongo.addTicket(cart);
+            return newTicket
         } catch (error) {
             console.log(error);
             throw new Error(error);
@@ -34,9 +31,7 @@ export class TicketManager {
     }
     async updateTicketById(id, products) {
         try {
-            const updatedTicket = await ticketsModel.findByIdAndUpdate(id, {
-                products,
-            });
+            const updatedTicket = await ticketsMongo.updateTicketById(id, products);
             return updatedTicket;
         } catch (error) {
             console.log(error);
@@ -45,7 +40,7 @@ export class TicketManager {
     }
     async deleteTicketById(id) {
         try {
-            const deletedTicket = await ticketsModel.findByIdAndDelete(id);
+            const deletedTicket = await ticketsMongo.deleteTicketById(id);
             return deletedTicket;
         } catch (error) {
             console.log(error);
@@ -54,21 +49,8 @@ export class TicketManager {
     }
     async addProductToTicket(id, pid) {
         try {
-            const ticket = await this.getTicketById(id);
-            const product = pid;
-            if (!ticket) {
-                return console.log("Ticket not found");
-            } else {
-                console.log(ticket);
-                const products = ticket.products;
-                const productFound = products.find((p) => p.pId == pid);
-                if (productFound) {
-                    productFound.quantity += 1;
-                } else {
-                    products.push({ pId: pid, quantity: 1 });
-                }
-                await this.updateTicketById(id, products);
-            }
+            const newTicket = await ticketsMongo.addProductToTicket(id, pid);
+            return newTicket;
         } catch (error) {
             console.log(error);
             throw new Error(error);
@@ -76,34 +58,17 @@ export class TicketManager {
     }
     async deleteProductFromTicket(id, pid) {
         try {
-            const ticket = await this.getTicketById(id);
-            const product = pid;
-            if (!ticket) {
-                return console.log("Ticket not found");
-            } else {
-                console.log(ticket);
-                const products = ticket.products;
-                const productFound = products.find((p) => p.pId == pid);
-                if (productFound) {
-                    const index = products.indexOf(productFound);
-                    products.splice(index, 1);
-                }
-                await this.updateTicketById(id, products);
-            }
-        } catch (error) {
+            const newTicket = await ticketsMongo.deleteProductFromTicket(id, pid);
+            return newTicket;
+            }catch (error) {
             console.log(error);
             throw new Error(error);
         }
     }
     async deleteAllProductsFromTicket(id) {
         try {
-            const ticket = await this.getTicketById(id);
-            if (!ticket) {
-                return console.log("Ticket not found");
-            } else {
-                const products = [];
-                await this.updateTicketById(id, products);
-            }
+            const newTicket = await ticketsMongo.deleteAllProductsFromTicket(id);
+            return newTicket;
         } catch (error) {
             console.log(error);
             throw new Error(error);

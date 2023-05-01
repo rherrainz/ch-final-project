@@ -1,11 +1,9 @@
-import { CartsMongo } from "../persistencia/dao/mongoDB/managers/cartsMongo.js";
+import { cartsModel } from "../persistencia/dao/mongoDB/models/cartsModel.js";
 
-const cartsMongo = new CartsMongo;
-
-export class CartManager {
+export class CartMongo {
   async getCarts() {
     try {
-      const infoCarts = await cartsMongo.getCarts();
+      const infoCarts = await cartsModel.find();
       return infoCarts;
     } catch (error) {
       console.log(error);
@@ -14,17 +12,20 @@ export class CartManager {
   }
   async getCartById(id) {
     try {
-      const cart = await cartsMongo.getCartById(id);
+      const cart = await cartsModel.findById(id).lean();
       return cart;
     } catch (error) {
       console.log(error);
       throw new Error(error);
     }
   }
-  async addCart(obj) {
+  async addCart() {
     try {
-      const cart = await cartsMongo.addCart(obj);
-      return cart;
+      const cart = {
+        products: [],
+      };
+      const newCart = await cartsModel.create(cart);
+      await newCart.save();
     } catch (error) {
       console.log(error);
       throw new Error(error);
@@ -32,7 +33,7 @@ export class CartManager {
   }
   async updateCartById(id, products) {
     try {
-      const updatedCart = await cartsMongo.updateCartById(id, { products });
+      const updatedCart = await cartsModel.findByIdAndUpdate(id, { products });
       return updatedCart;
     } catch (error) {
       console.log(error);
@@ -41,14 +42,14 @@ export class CartManager {
   }
   async deleteCartById(id) {
     try {
-      const deletedCart = await cartsMongo.findByIdAndDelete(id);
+      const deletedCart = await cartsModel.findByIdAndDelete(id);
       return deletedCart;
     } catch (error) {
       console.log(error);
       throw new Error(error);
     }
   }
-
+  
   async addProductToCart(id, pid) {
     try {
       const cart = await cartsModel.findById(id);
@@ -69,8 +70,15 @@ export class CartManager {
 
   async updateProductQuantity(id, pid, quantity) {
     try {
-      const cart = await cartsMongo.updateProductQuantity(id,pid,quantity);
-      return cart;
+      const cart = await this.getCartById(id);
+      const product = cart.products.find((product) => product._id == pid);
+      if (!cart) {
+        return console.log("Cart not found");
+      } else {
+        product.quantity = quantity;
+        cart.save();
+        return cart;
+      }
     } catch (error) {
       console.log(error);
       throw new Error(error);
@@ -78,7 +86,7 @@ export class CartManager {
   }
   async deleteCart(cid) {
     try {
-      const cart = await cartsMongo.deleteCart(cid);
+      const cart = await cartsModel.findByIdAndDelete(cid);
       return cart;
     } catch (error) {
       console.log(error);
@@ -86,7 +94,9 @@ export class CartManager {
   }
   async deleteProductFromCart(cId, pId) {
     try {
-      const cart = await cartsMongo.deleteProductFromCart(cId,pId);
+      const cart = await cartsModel.findById(cId);
+      cart.products = cart.products.filter((p) => p.product != pId);
+      await cart.save();
       return cart;
     } catch (error) {
       throw new Error(error);
@@ -94,7 +104,9 @@ export class CartManager {
   }
   async emptyCart(cId) {
     try {
-      const cart = await cartsMongo.emptyCart(cId);
+      const cart = await cartsModel.findById(cId);
+      cart.products = [];
+      await cart.save();
       return cart;
     } catch (error) {
       throw new Error(error);

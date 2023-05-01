@@ -1,38 +1,54 @@
-import { usersModel } from "../dao/mongoDB/models/users.model.js";
+import { UsersMongo } from "../persistencia/dao/mongoDB/managers/usersMongo.js";
+
+const usersMongo = new UsersMongo();
 
 export default class UsersManager{
-    async getUsers(email,password){
-        const user = await usersModel.find({email:email, password:password});
-        return user;
+    async getUsers(){
+        try{
+            const user= await usersMongo.getUsers();
+            return user;
+        }catch(error){
+            return error
+        }
+    }
+    async getUserById(email,password){
+        try{
+            const user = await usersMongo.getOneUser(email,password);
+            return user;
+        }catch(error){
+            return error
+        }
     }
     async getUserById(id){
-        const user = await usersModel.findById(id);
-        return user;
-    }
-    async addUser(first_name,last_name,email,age,password){
-        const user = {
-            first_name,
-            last_name,
-            email,
-            age,
-            password
+        try{
+            const user = await usersMongo.getUserById(id);
+            return user;
+        }catch(error){
+            return error
         }
-        const newUser = await usersModel.create(user);
-        return newUser;
     }
-    async updateUser(id,first_name,last_name,email,age,password){
-        const user = {
-            first_name,
-            last_name,
-            email,
-            age,
-            password
+    async addUser(obj){
+        try{
+            const newUser = await usersMongo.addUser(obj);
+            return newUser;
+        }catch(error){
+            return error;
         }
-        const updatedUser = await usersModel.findByIdAndUpdate(id,user);
+    }
+    async updateUser(obj){
+        try{
+        const updatedUser = await usersMongo.updateUser(obj);
         return updatedUser;
+        }catch(error){
+            return error;
+        }
     }
     async deleteUser(id){
-        const deletedUser = await usersModel.findByIdAndDelete(id);
-        return deletedUser;
+        try{
+            const deletedUser = await usersMongo.deleteUser(id);
+            return deletedUser;
+        }catch(error){
+            return error;
+        }
     }
 }
