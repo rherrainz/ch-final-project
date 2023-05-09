@@ -4,12 +4,14 @@ import cartsRouter from "./routes/cartsRouter.js";
 import viewsRouter from "./routes/viewsRouter.js";
 import sessionRouter from "./routes/sessionRouter.js";
 import usersRouter from "./routes/usersRouter.js";
+import productsMocksRouter from "./routes/productsMocksRouter.js";
 import handlebars from "express-handlebars";
 import {Server} from "socket.io";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import mongoStore from "connect-mongo";
 import { __dirname } from "./utils.js";
+import {errorMiddleware} from "./middlewares/errors/middleware.js;
 import './dbConfig.js'
 import 'dotenv/config'
 import './passport/passportStrategies.js'
@@ -52,7 +54,10 @@ app.use("/api/products", productsRouter);
 app.use('/api/carts', cartsRouter);
 app.use('/session', sessionRouter);
 app.use('/users', usersRouter);
+app.use('', productsMocksRouter);
 
+//middlewares
+app.use(errorMiddleware);
 
 const httpServer = app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
