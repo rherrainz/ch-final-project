@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
-import "dotenv/config";
+import {config} from '../config.js';
 
-const URI = process.env.MONGO_URI;
+const URI = config.mongoUri;
 
 mongoose.set("strictQuery", false);
 

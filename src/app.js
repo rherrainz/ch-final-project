@@ -11,16 +11,16 @@ import cookieParser from "cookie-parser";
 import session from "express-session";
 import mongoStore from "connect-mongo";
 import { __dirname } from "./utils.js";
-import {errorMiddleware} from "./middlewares/errors/middleware.js;
+import {errorMiddleware} from "./middlewares/errors/middleware.js";
 import './dbConfig.js'
-import 'dotenv/config'
+import {config} from './config.js'
 import './passport/passportStrategies.js'
 import './utils.js'
 
 const app = express();
 
 //configuración
-const PORT = process.env.PORT || 8080;
+const PORT = config.port || 8080;
 
 
 //configuración de app()
@@ -37,11 +37,11 @@ app.use(cookieParser());
 //session
 app.use(session({
   store: new mongoStore({
-    mongoUrl: process.env.MONGO_URI,
+    mongoUrl: config.mongoUri,
   }),
   resave: false,
   saveUninitialized: false,
-  secret: process.env.SESSION_SECRET,
+  secret: config.sessionSecret,
   cookie: {maxAge:60000}  
 }));
 

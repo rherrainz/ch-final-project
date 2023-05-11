@@ -2,7 +2,7 @@ import {dirname} from 'path';
 import {fileURLToPath} from 'url';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import 'dotenv/config'
+import {config} from '../config.js'
 
 export const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -15,6 +15,6 @@ export const hashPassword = async (password) => {
  }
 
  export const generateToken = async (user) => {
-   const token = jwt.sign({user}, process.env.JWT_SECRET)
+   const token = jwt.sign({user}, config.jwtSecret)
    return token;
  };
