@@ -59,3 +59,5 @@ if (config.nodeEnv === 'development') {
 }else{
     console.log('las variables de entorno deben ser developement o production')
 }
+
+export default logger;
