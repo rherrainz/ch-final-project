@@ -10,5 +10,7 @@ export default {
     gitHubClientId: process.env.GITHUB_CLIENT_ID,
     gitHubClientSecret: process.env.GITHUB_CLIENT_SECRET,
     nodeEnv: process.env.NODE_ENV || 'development',
+    gmailUser: process.env.GMAIL_USER,
+    gmailPassword: process.env.GMAIL_PASSWORD,
 
 };

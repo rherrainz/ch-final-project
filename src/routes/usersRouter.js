@@ -10,6 +10,8 @@ router.post("/registro", usersController.addUser());
 
 router.post("/login", usersController.login());
 
+router.put('/premium/:uid', usersController.changeRole());
+
 //registro con github
 router.get(
   "/registroGitHub",

@@ -4,6 +4,7 @@ import cartsRouter from "./routes/cartsRouter.js";
 import viewsRouter from "./routes/viewsRouter.js";
 import sessionRouter from "./routes/sessionRouter.js";
 import usersRouter from "./routes/usersRouter.js";
+import mailRouter from "./routes/mailRouter.js";
 import productsMocksRouter from "./routes/productsMocksRouter.js";
 import handlebars from "express-handlebars";
 import {Server} from "socket.io";
@@ -55,6 +56,7 @@ app.use('/api/carts', cartsRouter);
 app.use('/session', sessionRouter);
 app.use('/users', usersRouter);
 app.use('', productsMocksRouter);
+app.use('/email', mailRouter);
 
 //middlewares
 app.use(errorMiddleware);

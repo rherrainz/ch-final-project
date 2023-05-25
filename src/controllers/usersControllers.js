@@ -36,6 +36,17 @@ export class UsersController {
     req.session.logged = true;
     res.redirect("/products");
   }
+  async changeRole(req, res) {
+    const { uid } = req.params;
+    const role = req.body;
+    try{
+      const user = await usersManager.updateUser(uid, role);
+      res.json({message: "Role changed successfully", data: user});
+    }catch(error){
+      return error;
+    }
+  }
+  
   async logout(req, res) {
     req.session.destroy((error) => {
       if (error) console.log(error);

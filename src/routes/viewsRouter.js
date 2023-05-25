@@ -53,6 +53,19 @@ viewsRouter.get('/errorLogin', (req, res) => {
     res.render('errorLogin');
 });
 
+router.get('/resetpassword', (req, res) => {
+  res.render('resetpassword')
+})
+
+router.get('/passwordchanged', (req, res) => {
+  const { token } = req.query
+  res.render('passwordchanged', { token })
+})
+
+router.get('/expiredtoken', (req, res) => {
+  res.render('expiredtoken')
+})
+
 export default viewsRouter;
 
 //product 63ead20eb23ac1ea82e6af6a
