@@ -1,0 +1,84 @@
+paths:
+  /api/products:
+    get:
+      summary: Gets all the products
+      tags:
+        - Products
+    post:
+      summary: Adds a new product
+      tags:
+        - Products
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/product'  
+  /api/products/{pid}:
+    get:
+      summary: Gets a product by its ID
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          description: product ID
+          required: true      
+    put:
+      summary: Modifies a product by its ID and the new data
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          description: product Id
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/product'
+    delete:
+      summary: Deletes a product by its ID
+      tags:
+        - Products
+      parameters:
+        - name: pid
+          in: path
+          description: Product Id
+          required: true      
+               
+               
+components:
+  schemas:
+    Product:
+      type: object
+      properties:
+        pid:
+          type: objectId
+          description: product ID
+        title:
+          type: string
+          description: Product Name
+        description:
+          type: string
+          description: Product Details
+        code:
+          type: string
+          description: Product Code
+        price:
+          type: number
+          description: Product Price
+        status:
+          type: boolean
+          description: Product Status
+        stock:
+          type: number
+          description: Stock of the product
+        category:
+          type: string
+          description: Category of the product
+        thumbnails:
+          type: array
+          description: Array of URLs containing images of the product

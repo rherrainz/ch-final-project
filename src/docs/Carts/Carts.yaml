@@ -1,0 +1,134 @@
+paths:
+  /api/carts:
+    post:
+      summary: Creates a shopping cart
+      tags:
+        - Carts
+  /api/carts/{cid}:
+    get:
+      summary: Gets a shopping cart by its ID
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: cart ID
+          required: true      
+    put:
+      summary: Modifies a cart by its ID and the new data
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: cart ID
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/cart'
+    delete:
+      summary: Deletes a cart by its ID
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: Cart ID
+          required: true      
+      
+  /api/carts/{cid}/product/{pid}:
+    post:
+      summary: Adds a product to an existent cart
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: Cart ID
+          required: true
+        - name: pid
+          in: path
+          description: Product Id
+          required: true  
+    put:
+      summary: Updates qty of an existent product in a cart
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: cart Id
+          required: true
+        - name: pid
+          in: path
+          description: product id
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/cart'             
+    delete:
+      summary: deletes a product from a cart
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: cart id
+          required: true
+        - name: pid
+          in: path
+          description: products id
+          required: true                   
+  /api/carts/{cid}/purchase:
+    post:
+      summary: Generates a ticket with the information of an existent cart
+      tags:
+        - Carts
+      parameters:
+        - name: cid
+          in: path
+          description: cart id
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#components/requestBodies/user'
+components:
+  schemas:
+    Cart:
+      type: object
+      properties:
+        cid:
+          type: objectId
+          description: cart id
+        products:
+          type: array
+          properties:
+            product:
+              type: objectId
+              description: product id
+            quantity:
+              type: number
+              description: product quantity
+    User:
+      type: string             
+  requestBodies:
+    cart:
+      type: object
+      properties:
+        quantity:
+          type: number
+          description: product quantity
+    user:
+      type: object
+      properties:
+        userId:
+          type: string   
