@@ -23,7 +23,7 @@ const userMock1 = {
 const userMock2 = {
   first_name: "test",
   last_name: "test",
-  email: "test@mockmail.com",
+  email: "test2@mockmail.com",
   age: 10,
   password: "test",
 };
