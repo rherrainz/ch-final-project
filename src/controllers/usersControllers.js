@@ -53,4 +53,21 @@ export class UsersController {
       else res.redirect("/login");
     });
   }
+
+  async documentUploader(req, res) {
+    const { uid } = req.params;
+    const { name, reference } = req.files;
+    try{
+      const user = await usersManager.getUserById(uid);
+      const requiredDocuments = ['identification', 'adress', 'account'];
+      if(requiredDocuments.length!== user.documents.length){
+        res.json({message: "You must upload all the required documents"});
+      }else{
+        const updatedUser = await usersManager.updateUser(uid, role);
+        res.json({message: "Documents uploaded successfully", data: updatedUser});
+      }
+    }catch(error){
+      return error;
+    }
+  }
 }
