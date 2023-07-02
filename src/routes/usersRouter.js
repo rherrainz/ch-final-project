@@ -1,17 +1,17 @@
 import { Router } from "express";
 //import { usersModel } from "../dao/mongoDB/models/users.model.js";
-import { UsersController } from "../../controllers/usersControllers.js";
+import { UsersController } from "../controllers/usersControllers.js";
 import passport from "passport";
 import { uploader } from "../utils.js";
 
 const router = Router();
 const usersController = new UsersController();
 
-router.post("/registro", usersController.addUser());
+router.post("/registro", usersController.addUser);
 
-router.post("/login", usersController.login());
+router.post("/login", usersController.login);
 
-router.put('/premium/:uid', usersController.changeRole());
+router.put('/premium/:uid', usersController.changeRole);
 
 //registro con github
 router.get(
@@ -22,10 +22,10 @@ router.get(
 router.get(
   "/github",
   passport.authenticate("githubRegistro", { failureRedirect: "/errorLogin" }),
-  usersController.getGitHub()
+  usersController.getGitHub
 );
 
-router.get("/logout", usersController.logout());
+router.get("/logout", usersController.logout);
 
 router.post('/premium/:uid/document', uploader.fields([
   {name: 'profileImage'},
@@ -34,6 +34,6 @@ router.post('/premium/:uid/document', uploader.fields([
   {name: 'identification'},
   {name: 'address'},
   {name: 'account'}
-], usersController.documentUploader()));
+], usersController.documentUploader));
 
 export default router;

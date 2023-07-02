@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { ProductManager } from "../dao/mongoDB/controller/productsController.js";
-import { CartManager } from "../dao/mongoDB/controller/cartsController.js";
+import { ProductController } from "../controllers/productsControllers.js";
+import { CartController } from "../controllers/cartsControllers.js";
 import {auth, isLogged} from '../middlewares/auth.middlewares.js'
 
-const cartManager = new CartManager();
-const productManager = new ProductManager();
+const cartManager = new CartController();
+const productManager = new ProductController();
 
 const viewsRouter = Router();
 
@@ -53,16 +53,16 @@ viewsRouter.get('/errorLogin', (req, res) => {
     res.render('errorLogin');
 });
 
-router.get('/resetpassword', (req, res) => {
+viewsRouter.get('/resetpassword', (req, res) => {
   res.render('resetpassword')
 })
 
-router.get('/passwordchanged', (req, res) => {
+viewsRouter.get('/passwordchanged', (req, res) => {
   const { token } = req.query
   res.render('passwordchanged', { token })
 })
 
-router.get('/expiredtoken', (req, res) => {
+viewsRouter.get('/expiredtoken', (req, res) => {
   res.render('expiredtoken')
 })
 

@@ -1,6 +1,6 @@
-import { productsModel } from "../persistencia/dao/mongoDB/models/productsModel.js";
+import { productsModel } from "../models/productsModel.js";
 
-export class ProductMongo {
+export class ProductsMongo {
   async getProducts(limit, page, category, sort) {
     try {
       

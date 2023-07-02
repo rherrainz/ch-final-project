@@ -1,9 +1,9 @@
 import {Router} from 'express';
-import {sendMail,resetPassword} from '../controllers/mailController.js';
+import {sendEmail,resetPassword} from '../controllers/mailControllers.js';
 
 const router = Router();
 
-router.post('/sendmail', sendMail);
+router.post('/sendmail', sendEmail);
 router.post('/resetpassword', resetPassword);
 
 export default router;

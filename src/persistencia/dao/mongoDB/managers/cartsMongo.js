@@ -1,6 +1,6 @@
-import { cartsModel } from "../persistencia/dao/mongoDB/models/cartsModel.js";
+import { cartsModel } from "../models/cartsModel.js";
 
-export class CartMongo {
+export class CartsMongo {
   async getCarts() {
     try {
       const infoCarts = await cartsModel.find();

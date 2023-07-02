@@ -2,7 +2,7 @@ import { UsersMongo } from "../persistencia/dao/mongoDB/managers/usersMongo.js";
 
 const usersMongo = new UsersMongo();
 
-export default class UsersManager{
+export class UsersManager{
     async getUsers(){
         try{
             const user= await usersMongo.getUsers();

@@ -1,5 +1,5 @@
 import {Router} from 'express';
-import { ProductController } from '../../controllers/productsControllers.js';
+import { ProductController } from '../controllers/productsControllers.js';
 import { isAdmin,isLogged } from '../middlewares/auth.middlewares.js';
 
 
@@ -8,18 +8,18 @@ const productController = new ProductController();
 
 
 //get all products with pagination
-productsRouter.get('/', productController.getProducts());
+productsRouter.get('/', productController.getProducts);
 
 //get product by id
-productsRouter.get('/:pid', productController.getProductById());
+productsRouter.get('/:pid', productController.getProductById);
 
 //add new product
-productsRouter.post('/', isAdmin(), productController.addProduct());
+productsRouter.post('/', productController.addProduct);
 
 //update product by id
-productsRouter.put('/:pid', isAdmin(), productController.updateProductById());
+productsRouter.put('/:pid',  productController.updateProductById);
 
 //delete product by id
-productsRouter.delete('/:pid',isAdmin(), productController.deleteProductById());
+productsRouter.delete('/:pid', productController.deleteProductById);
 
 export default productsRouter;

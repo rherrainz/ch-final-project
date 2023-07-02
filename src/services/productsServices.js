@@ -1,4 +1,4 @@
-import { ProductMongo, ProductsMongo } from "../persistencia/dao/mongoDB/managers/productsMongo.js";
+import { ProductsMongo } from "../persistencia/dao/mongoDB/managers/productsMongo.js";
 
 const productsMongo = new ProductsMongo();
 

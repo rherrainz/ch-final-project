@@ -1,6 +1,6 @@
-import { usersModel } from "../persistencia/dao/mongoDB/models/users.model.js";
+import { usersModel } from "../models/usersModel.js";
 
-export default class UsersMongo{
+export class UsersMongo{
     async getUsers(){
         try{
             const users = await usersModel.find();

@@ -1,4 +1,4 @@
-import { CartManager } from "../services/cartsServices";
+import { CartManager } from "../services/cartsServices.js";
 
 const cartManager = new CartManager();
 

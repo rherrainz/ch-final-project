@@ -1,7 +1,7 @@
 import config from '../config.js';
-import {transporter} from '../config/nodemailer.js';
+import {transporter} from '../messages/nodemailer.js';
 import jwt from 'jsonwebtoken';
-import {hashData, compareData} from '../utils/bcrypt.js';
+import {hashData, compareData} from '../utils.js';
 import {UsersManager} from '../services/usersServices.js';
 
 const usersManager = new UsersManager();

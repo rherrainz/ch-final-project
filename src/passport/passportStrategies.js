@@ -2,13 +2,13 @@ import passport from 'passport';
 import { Strategy as LocalStrategy } from 'passport-local';
 import { Strategy as GitHubStrategy } from 'passport-github2';
 import { ExtractJwt, Strategy as jwtStrategy} from 'passport-jwt';
-import UsersManager from '../dao/mongoDB/controller/usersControler.js';
-import { usersModel } from '../dao/mongoDB/models/users.model.js';
+import { UsersController } from "../controllers/usersControllers.js";
+import { usersModel } from '../persistencia/dao/mongoDB/models/usersModel.js';
 import { hashPassword } from "../utils.js";
 import 'dotenv/config'
 
 
-const usersManager = new UsersManager();
+const usersController = new UsersController();
 
 //passport local strategy
 passport.use(
@@ -55,7 +55,7 @@ passport.use(
             email: profile._json.email,
             password: " ",
           };
-          const dbResultado = await usersModel.create(nuevoUsuario);
+          const dbResultado = await usersController.addUser(nuevoUsuario);
           done(null, dbResultado);
         } else {
           done(null, usuario);

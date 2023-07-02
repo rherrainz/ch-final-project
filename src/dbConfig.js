@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import {config} from '../config.js';
+import config from './config.js';
 
 const URI = config.mongoUri;
 
@@ -7,7 +7,7 @@ mongoose.set("strictQuery", false);
 
 try {
   mongoose.connect(URI);
-  console.log("Conectado a la base de datos");
+  console.log("Database connected");
 } catch (error) {
-  console.log("Error al conectarse a la base de datos", error);
+  console.log("Error: Database not connected: ", error);
 }

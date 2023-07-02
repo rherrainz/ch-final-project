@@ -14,7 +14,7 @@ import mongoStore from "connect-mongo";
 import { __dirname } from "./utils.js";
 import {errorMiddleware} from "./middlewares/errors/middleware.js";
 import './dbConfig.js'
-import {config} from './config.js'
+import config from './config.js'
 import './passport/passportStrategies.js'
 import './utils.js'
 
