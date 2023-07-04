@@ -7,13 +7,16 @@ import { uploader } from "../utils.js";
 const router = Router();
 const usersController = new UsersController();
 
+router.get('/', usersController.getAllUsers);
+
+router.delete('/', usersController.deleteUnactiveUsers);
+
 router.post("/registro", usersController.addUser);
 
 router.post("/login", usersController.login);
 
 router.put('/premium/:uid', usersController.changeRole);
 
-//registro con github
 router.get(
   "/registroGitHub",
   passport.authenticate("githubRegistro", { scope: ["user:email"] })

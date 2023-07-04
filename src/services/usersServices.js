@@ -51,4 +51,32 @@ export class UsersManager{
             return error;
         }
     }
+    async getAllUsers(){
+        try{
+            const users = await usersMongo.getUsers();
+            const usersArray = [];
+            users.forEach(user => {
+                const name = user.first_name + " " + user.last_name;
+                const email = user.email;
+                const role = user.role;
+                usersArray.push({name, email, role});
+            });
+            return users;
+
+        }catch(error){
+            return error;
+        }
+    }
+    async deleteUnactiveUsers(){
+        try{
+            const users = await usersMongo.getUsers();
+            const usersToDelete = users.filter(user => user.active === false);
+            usersToDelete.forEach(async user => {
+                await usersMongo.deleteUser(user._id);
+            });
+            return usersToDelete;
+        }catch(error){
+            return error;
+        }
+    }
 }

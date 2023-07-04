@@ -63,4 +63,14 @@ export class UsersMongo{
             console.log(error);
         }
     }
+    async deleteUnactiveUsers(){
+        try{
+            const date = new Date();
+            const dateDel = new Date(date.setDate(date.getDate() - 2));
+            const deletedUsers = await usersModel.deleteMany({last_connection: dateDel });
+            return deletedUsers;
+        }catch(error){
+            console.log(error);
+        }
+    }
 }

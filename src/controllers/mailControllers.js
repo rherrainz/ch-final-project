@@ -16,7 +16,7 @@ export const sendEmail = async (req, res) => {
     }
     const token = jwt.sign({email}, key, {expiresIn: '1h'});
     const mailOptions = {
-        from: 'YOUR GMAIL ADDRESS',
+        from: 'E-Commerce',
         to: email,
         subject: 'Reset password',
         html: `<h2>Por favor hacer click en el siguiente enlace para recuperar su contraseña</h2>
@@ -58,4 +58,27 @@ export const resetPassword = async (req, res) => {
         console.log(error);
         }
     }       
+}
+
+export const sendEmailDeletedProduct = async (req, res) => {
+    const {email} = req.body;
+    const pid = req.params.pid;
+    const user = await usersManager.getUserByEmail(email);
+    if (!user||user.role!=='premium') {
+        res.status(404).json({message: 'User not found'});
+    }
+    const mailOptions = {
+        from: 'E-Commerce',
+        to: email,
+        subject: 'Artículo eliminado de su carrito',
+        html: `<h2>Artículo eliminado de su carrito</h2>
+             <p> Se ha eliminado el art ${pid} de su carrito</>
+             Agradecemos que siga siendo cliente premium de nuestra tienda`
+    }
+    try{
+        await transporter.sendEmail(mailOptions);
+        res.send('Email sent')
+    }catch(error){
+        res.status(500).json({message: 'Error sending email'});
+    }
 }

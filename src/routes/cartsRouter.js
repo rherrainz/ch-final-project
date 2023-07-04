@@ -1,6 +1,7 @@
 import {Router} from 'express';
 import { CartController } from '../controllers/cartsControllers.js';
 import { isLogged } from '../middlewares/auth.middlewares.js';
+import { sendEmailDeletedProduct } from '../controllers/mailControllers.js';
 
 const cartRouter = Router();
 const cartController = new CartController();
@@ -24,7 +25,7 @@ cartRouter.put('/:cid/product/:pid', isLogged, cartController.updateQuantityById
 cartRouter.delete('/:cid', isLogged,cartController.deleteCartById);
 
 //delete a product from a cart by id
-cartRouter.delete('/:cid/product/:pid', cartController.deleteProductFromCartById);
+cartRouter.delete('/:cid/product/:pid', cartController.deleteProductFromCartById,sendEmailDeletedProduct);
 
 //add a product to a cart by id
 cartRouter.post('/:cid/product/:pid', cartController.addProductToCartById);

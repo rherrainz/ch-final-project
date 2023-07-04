@@ -70,4 +70,22 @@ export class UsersController {
       return error;
     }
   }
+
+  async getAllUsers(req, res) {
+    try{
+      const users = await usersManager.getAllUsers();
+      res.json({message: "Users retrieved successfully", data: users});
+    }catch(error){
+      return error;
+    }
+  }
+
+  async deleteUnactiveUsers(req, res) {
+    try{
+      const users = await usersManager.deleteUnactiveUsers();
+      res.json({message: "Users deleted successfully", data: users});
+    }catch(error){
+      return error;
+    } 
+  }
 }
